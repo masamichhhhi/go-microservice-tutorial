@@ -3,4 +3,4 @@ https://www.velotio.com/engineering-blog/build-a-containerized-microservice-in-g
 
 
 Next  
-transportパッケージの実装から
+gRPCハンドラーの実装から
