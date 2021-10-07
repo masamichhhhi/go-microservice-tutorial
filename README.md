@@ -3,4 +3,4 @@ https://www.velotio.com/engineering-blog/build-a-containerized-microservice-in-g
 
 
 Next  
-gRPCハンドラーの実装から
+エントリーポイントの実装
