@@ -19,11 +19,15 @@ type Set struct {
 	WatermarkEndpoint     endpoint.Endpoint
 }
 
-// func NewEndpointSet(svc watermark.Service) Set {
-// 	return Set{
-// 		// GetEndpoint: MakeGet,
-// 	}
-// }
+func NewEndpointSet(svc watermark.Service) Set {
+	return Set{
+		GetEndpoint:           MakeGetEndpoint(svc),
+		AddDocumentEndpoint:   MakeAddDocumentEndpoint(svc),
+		StatusEndpoint:        MakeStatusEndpoint(svc),
+		ServiceStatusEndpoint: MakeServiceStatusEndpoint(svc),
+		WatermarkEndpoint:     MakeWatermarkEndpoint(svc),
+	}
+}
 
 func MakeGetEndpoint(svc watermark.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
@@ -44,6 +48,17 @@ func MakeStatusEndpoint(svc watermark.Service) endpoint.Endpoint {
 			return StatusResponse{Status: status, Err: err.Error()}, err
 		}
 		return StatusResponse{Status: status, Err: ""}, nil
+	}
+}
+
+func MakeAddDocumentEndpoint(svc watermark.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(AddDocumentRequest)
+		ticketID, err := svc.AddDocument(ctx, req.Document)
+		if err != nil {
+			return AddDocumentResponse{TicketID: ticketID, Err: err.Error()}, nil
+		}
+		return AddDocumentResponse{TicketID: ticketID, Err: ""}, nil
 	}
 }
 

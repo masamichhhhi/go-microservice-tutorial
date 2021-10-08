@@ -18,29 +18,25 @@ func NewHttpHandler(ep endpoints.Set) http.Handler {
 
 	m.Handle("/healthz", httptransport.NewServer(
 		ep.ServiceStatusEndpoint,
-		decodeHTTPGetRequest,
+		decodeHTTPServiceStatusRequest,
 		encodeResponse,
 	))
-
 	m.Handle("/status", httptransport.NewServer(
 		ep.StatusEndpoint,
 		decodeHTTPStatusRequest,
 		encodeResponse,
 	))
-
 	m.Handle("/addDocument", httptransport.NewServer(
 		ep.AddDocumentEndpoint,
-		decodeHTTPStatusRequest,
+		decodeHTTPAddDocumentRequest,
 		encodeResponse,
 	))
-
 	m.Handle("/get", httptransport.NewServer(
 		ep.GetEndpoint,
 		decodeHTTPGetRequest,
 		encodeResponse,
 	))
-
-	m.Handle("watermark", httptransport.NewServer(
+	m.Handle("/watermark", httptransport.NewServer(
 		ep.WatermarkEndpoint,
 		decodeHTTPWatermarkRequest,
 		encodeResponse,
@@ -64,6 +60,11 @@ func decodeHTTPStatusRequest(ctx context.Context, r *http.Request) (interface{},
 	if err != nil {
 		return nil, err
 	}
+	return req, nil
+}
+
+func decodeHTTPServiceStatusRequest(_ context.Context, _ *http.Request) (interface{}, error) {
+	var req endpoints.ServiceStatusRequest
 	return req, nil
 }
 
